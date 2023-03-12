@@ -1,0 +1,227 @@
+
+<section class="container mt-5 mb-3" >
+
+<h1>Productos</h1>
+
+</section>
+<section class="container  text-center">
+
+    <div class="row justify-content-start " id="productosCargados">
+       
+    </div>
+
+</section>
+{{!--  --}}
+
+
+
+<!-- Modal -->
+
+<div class="container">
+      <div class="modal" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog " role="document">
+          <div class="modal-content  ">
+            <div class="modal-header row">
+              <h5 class="modal-title col">CARRITO</h5>
+           </div>
+                <form id="formularioModal">
+            <div class="modal-body row">
+                <div class="col mt-2 " style="width: 20rem;">
+                    <div class=" card">
+                        <input style="border: 0;" class="form-control text-center border-danger" name="id" id="idProductoModal"
+                            type="text" disabled>
+                        <div class="text-center mt-5">
+                            <label for="" class="text-center">Nombre:</label>
+                            <input class="text-center" style="border: 0;" id="nombreModal"  type="text" disabled></input>
+                        </div>
+                        <div class="text-center ">
+                            <label for="" class="text-center">Precio:</label>
+                            <input style="border: 0;" class="text-center" id="precioModal"  type="text" disabled></input>
+                        </div>
+                        <div class="text-center">
+                            <label for="" class="text-center "  >Stock:</label>
+                            <input  style="border: 0;" class="text-center" id="stockModal"  type="text" disabled></input>
+                        </div> 
+                        <input   type="hidden" id="descripcionModal"></input>
+                         <input   type="hidden"  id="imagenModal"></input>
+                            <div class="row mt-5 "><button type="click"  class="btn btn-outline-success" >Comprar</button></div>
+          
+                    </div>
+                </div>
+            </div>
+              </form>
+                  
+            <div class="modal-footer">
+                      <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+             
+              
+            </div>
+          </div>
+        </div>
+     </div>
+          </div>
+
+
+{{!--  --}}
+
+
+
+
+<script>
+/////////////GET PARA TRAER CARD DE PRODUCTOS    
+fetch('http://localhost:3001/productos', )
+  .then(response => response.json())
+  .then(response =>{getProduct(response.productos)
+                 
+  })
+  .catch(err => console.error(err));
+
+  const getProduct=(data)=>{
+    
+   let elementos=""
+    data.forEach((product)=>{
+        
+   // console.log(data)
+
+   elementos+=
+`
+ <div class="col-4">
+<div class="card border-danger col-12 mt-2 mb-2"  style="max-width: 540px;">
+  <td><img src="${product.imagen}" alt="${product.nombre}"  class="img-fluid rounded-start"></td>
+  <div class="card-body">
+    <h5 class="card-title" >${product.nombre}</h5>
+    <hr>
+        <p class="card-text" id="nombre">${product.precio}</p>
+        <p class="card-text">Stock ${product.stock}</p>
+    <div class="text-center">
+    <button  class="btn btn-outline-success" onclick="agregarCarrito('${product.id}')">Carrito</button>
+       </div>
+   </div>
+</div>
+
+        </div>
+`
+    })
+       document.getElementById("productosCargados").innerHTML=elementos
+
+
+  }
+////////////ENVIO DATOS AL MODAL PARA AGREGAR A LA VENTA
+const agregarCarrito = (id)=>{
+
+const idProductoModal= document.getElementById("idProductoModal")
+idProductoModal.value=id
+
+const carritoContenedor= document.getElementById("carritoContenedor")
+carritoContenedor.textContent=1
+
+
+  
+
+fetch('http://localhost:3001/productos' )
+  .then(response =>  response.json())
+  .then(response =>{ response
+     let result= response.productos.forEach(pro =>{
+       if(pro.id===id ){
+    idProductoModal.value=pro.id
+    nombreModal.value=pro.nombre
+    stockModal.value= pro.stock
+    precioModal.value=pro.precio
+    descripcionModal.value=pro.descripcion
+    imagenModal.value=pro.imagen
+     }
+   
+ 
+     })
+    const myModalAlternative = new bootstrap.Modal('#myModal')
+       myModalAlternative.show()
+      
+  })
+  .catch(err => console.error(err));
+  
+       
+}
+////////ACTUALIZAR PRODUCTO
+
+const formularioModal=document.getElementById("formularioModal")
+const stockModal= document.getElementById("stockModal")
+ formularioModal.addEventListener("submit", (event) => {
+        event.preventDefault();
+       const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+if (stockModal.value==="1" ){
+alert("¡¡¡ NO HAY STOCK DISPONIBLE !!!")
+ return location.reload();
+} 
+    //  console.log()
+
+        let nuevaVenta = {
+
+       total:precioModal.value,
+       producto:[{
+        id:idProductoModal.value,
+        nombre:nombreModal.value,
+        cantidad:1
+        }],
+	            
+        }
+       // console.log(nuevoProducto)
+      
+        fetch("http://localhost:3001/ventas/api", {
+            method: "post",
+            headers,
+            body: JSON.stringify(nuevaVenta),
+            redirect: "follow"
+        })
+  .then(response => response.json())
+  .then(response => alert(response))
+  .catch(err => console.error(err));
+   location.reload();
+       
+ })
+
+
+//ACTUALIZAR PRODUCTOS
+
+
+ formularioModal.addEventListener("submit", (event) => {
+        event.preventDefault();
+       const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let nuevoProducto = {
+        id:idProductoModal.value,
+ 	      nombre:nombreModal.value,
+        descripcion: descripcionModal.value,
+        stock:stockModal.value-1,
+        precio: precioModal.value,
+        imagen:imagenModal.value
+ 	
+            
+        }
+       // console.log(nuevoProducto)
+      
+        fetch("http://localhost:3001/productos", {
+            method: "PUT",
+            headers,
+            body: JSON.stringify(nuevoProducto),
+            redirect: "follow"
+        })
+  .then(response => response.json())
+  .then(response => console.log(response))
+  .catch(err => console.error(err));
+        
+           location.reload();
+        
+    })
+   
+
+
+
+
+</script>

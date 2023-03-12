@@ -1,0 +1,245 @@
+{{!-- MODAL PARA ACTUALIZAR --}}
+<div class="modal fade text-center" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">ACTUALIZAR PRODUCTO</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+          <form id="formularioModal">
+            ID<input class="form-control text-center border-danger"  name="id" id="idProductoModal" type="text" disabled>
+            NOMBRE<input class="form-control border-success" name=" nombre" id="nombreModal"
+                type="text" required>
+            DESCRIPCION<input class="form-control border-success" name="descripcionModal"
+                id="descripcionModal" type="text" required>
+            STOCK<input class="form-control border-success"  name="stock" id="stockModal" type="text"
+                required>
+            PRECIO<input class="form-control border-success" name="precio" id="precioModal"
+                type="text" required>
+            IMAGEN<input class="form-control border-success"  id="imagenModal" name="imagenModal"
+                type="text">
+                  <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button type="click"  class="btn btn-outline-warning">Actualizar</button>
+      </div>
+        </form>
+         
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+
+
+<section class="container text-center">
+    <div class="row align-items-center">
+
+        <section class="col ">
+            <table class="table mt-5">
+                <thead>
+                    <tr class="table-secondary">
+                        <th scope="col">ID</th>
+                        <th scope="col" IMG</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col" class="table-danger">Eliminar</th>
+                        <th scope="col">Actualizar</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center border-danger" id="productosCargados">
+
+                </tbody>
+            </table>
+
+        </section>
+        <section class="col mb-5" id="formProductos" >
+            <h2 class="card-title ">Ingresar Producto</h2>
+            <form id="formulario" >
+                ID: <input class="form-control text-bg-danger" name="id" id="idProducto" type="text"  disabled>
+                Nombre: <input class="form-control" name="nombre"   id="nombre" type="text" required>
+                Descripción: <input class="form-control  " name="descripcion" id="descripcion" type="text" required>
+                Stock: <input class="form-control" name="stock" id="stock" type="text" required>
+                Precio: <input class="form-control" name="precio" id="precio"  type="number" required>
+                Imagen: <input class="form-control" id="imagen" name="imagen" type="text">
+                <div class="mt-2 row">
+                    <button type="submit" class="btn btn-outline-success">CREAR PRODUCTO</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+
+</section>
+<style>
+table {
+        table-layout: fixed;
+        position:sticky;
+    }
+    th,
+    td {
+
+        width: 100px;
+        word-wrap: break-word;
+    }
+
+  
+</style>
+
+
+   
+
+<script>
+
+fetch('http://localhost:3001/productos', )
+  .then(response => response.json())
+  .then(response =>{getProduct(response.productos)
+                 
+  })
+  .catch(err => console.error(err));
+
+  const getProduct=(data)=>{
+    
+   let elementos=""
+    data.forEach((product)=>{
+        
+   // console.log(data)
+
+   elementos+=
+`
+  <tr>
+                    <th scope="row">${product.id}</th>
+                    <td><img src="${product.imagen}" alt="${product.nombre}" width="100px"></td>
+                    <td>${product.nombre}</td>
+                    <td>${product.precio}</td>
+                    <td >${product.stock}</td>
+                    <td><button class="btn btn-outline-danger" onclick="eliminarProducto('${product.id}')">Eliminar</button></td>
+                    <td><button class="btn btn-outline-info" id="actualizaProducto" onclick="actualizarProducto('${product.id}')">Actualizar</button></td>
+                </tr>
+`
+    })
+       document.getElementById("productosCargados").innerHTML=elementos
+
+
+  }
+
+
+
+
+
+/////////////////////HACIENDO POST///////////////////
+
+  const formulario = document.querySelector('#formulario')
+    
+    formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        //console.log("Capturando evento submit")
+     const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let nuevoProducto = {
+            
+ 	  nombre:nombre.value,
+      descripcion:descripcion.value,
+      stock:stock.value,
+      precio:precio.value,
+      imagen:imagen.value
+ 	
+            
+        }
+       // console.log(nuevoProducto)
+      
+        fetch("http://localhost:3001/productos", {
+            method: "post",
+            headers,
+            body: JSON.stringify(nuevoProducto),
+            redirect: "follow"
+        })
+  .then(response => response.json())
+  .then(response =>  alert(response.message))
+  .catch(err => console.error(err));
+           formulario.reset();
+           location.reload();
+        
+    })
+
+/////////////////////////HACIENDO DELETE////////////
+const eliminarProducto=(id)=>{
+        const options = {method: 'DELETE'};
+
+fetch('http://localhost:3001/productos/'+id, options)
+  .then(response => response.json())
+  .then(response => alert(response))
+  .catch(err => console.error(err));
+   location.reload();
+     
+}
+////////////////TRAEMOS LOS DATOS  DE LA API A LA VENTANA MODAL////////////////////////
+
+const actualizarProducto =(id)=>{
+
+const idProductoModal= document.getElementById("idProductoModal")
+idProductoModal.value=id
+
+fetch('http://localhost:3001/productos' )
+  .then(response => response.json())
+  .then(response =>{
+
+    let result= response.productos.forEach(pro =>{
+     if(pro.id===id){
+    idProductoModal.value=pro.id
+    nombreModal.value=pro.nombre
+    descripcionModal.value=pro.descripcion
+    stockModal.value= pro.stock
+    precioModal.value=pro.precio
+    imagenModal.value=pro.imagen
+     }
+   
+     })
+    const myModalAlternative = new bootstrap.Modal('#myModal')
+       myModalAlternative.show()
+      
+  })
+  .catch(err => console.error(err));
+  
+       
+}
+ 
+
+const formularioModal=document.getElementById("formularioModal")
+ formularioModal.addEventListener("submit", (event) => {
+        event.preventDefault();
+       const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let nuevoProducto = {
+      id:idProductoModal.value,
+ 	    nombre:nombreModal.value,
+      descripcion: descripcionModal.value,
+      stock:stockModal.value,
+      precio: precioModal.value,
+      imagen:imagenModal.value
+ 	
+            
+        }
+       // console.log(nuevoProducto)
+      
+        fetch("http://localhost:3001/productos", {
+            method: "PUT",
+            headers,
+            body: JSON.stringify(nuevoProducto),
+            redirect: "follow"
+        })
+  .then(response => response.json())
+  .then(response => alert(response.message))
+  .catch(err => console.error(err));
+           formulario.reset();
+           location.reload();
+        
+    })
+        
+
+
+       
+</script>
+

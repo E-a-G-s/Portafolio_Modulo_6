@@ -1,0 +1,52 @@
+{
+  "productos": [
+    {
+      "id": "1",
+      "nombre": "GTA 6",
+      "descripcion": "Video Juego",
+      "stock": 90,
+      "precio": "1000000",
+      "imagen": "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg"
+    },
+    {
+      "id": "2",
+      "nombre": "Tomb Raider",
+      "descripcion": "Video Juego",
+      "stock": 192,
+      "precio": "5000",
+      "imagen": "https://media.rawg.io/media/games/021/021c4e21a1824d2526f925eff6324653.jpg"
+    },
+    {
+      "id": "3",
+      "nombre": "Counter-Strike",
+      "descripcion": "Video Juego",
+      "stock": 27,
+      "precio": "10000",
+      "imagen": "https://media.rawg.io/media/games/736/73619bd336c894d6941d926bfd563946.jpg"
+    },
+    {
+      "id": "4",
+      "nombre": "DOOM(2016)",
+      "descripcion": "Video Juego",
+      "stock": 7,
+      "precio": "10000",
+      "imagen": "https://media.rawg.io/media/games/c4b/c4b0cab189e73432de3a250d8cf1c84e.jpg"
+    },
+    {
+      "id": "50675",
+      "nombre": "Fifa 2020",
+      "descripcion": "Juego de futbol",
+      "stock": 4,
+      "precio": "100000",
+      "imagen": "https://media.rawg.io/media/games/ab7/ab7fdd680a7008a14b5bd8d99c760925.jpg"
+    },
+    {
+      "id": "72528",
+      "nombre": "juego suecio",
+      "descripcion": "juego",
+      "stock": 8,
+      "precio": "10000",
+      "imagen": "https://media.rawg.io/media/games/dd5/dd50d4266915d56dd5b63ae1bf72606a.jpg"
+    }
+  ]
+}

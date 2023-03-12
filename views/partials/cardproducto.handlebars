@@ -1,0 +1,77 @@
+
+<form id="formulario">
+<div class="col-4">
+<div class="card border-danger col-12 mt-2 mb-2"  style="max-width: 540px;">
+  <td><img src="{{this.imagen}}" alt="{{this.nombre}}"  class="img-fluid rounded-start"></td>
+  <div class="card-body">
+    <h5 class="card-title" >{{this.nombre}}</h5>
+    <hr>
+        <p class="card-text" id="nombre">{{this.precio}}</p>
+        <p class="card-text">Stock {{this.stock}}</p>
+    <div class="text-center">
+    <button  class="btn btn-outline-success"  type="submit" onclick="agregarCarrito('{{id}}','{{stock}}','{{nombre}}','{{precio}}')" >Comprar</button>
+       </div>
+   </div>
+</div>
+</div>
+</form>
+<script>
+ function agregarCarrito (id,stock,nombre,precio){
+  const modalBody= document.querySelector(".modal .modal-body")
+  const carritoContenedor = document.querySelector("#carritoContenedor")
+ modalBody.innerHTML+=
+ `
+      <div class="card col-2 mt-2" style="width: 10rem;">
+      <div class="card-body">
+      <h5 class="card-title" >${nombre}</h5>
+      <p class="card-text">Precio: ${precio}</p>
+       <p class="card-text">Stock: ${stock}</p>
+       </div>
+  </div>
+  
+  ` 
+
+  const formulario = document.querySelector('#formulario')
+    
+    formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        //console.log("Capturando evento submit")
+     const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let nuevaVenta = {
+            
+ 	    total:1,
+      producto:[{id:id,nombre:nombre,cantidad:1}],
+      	
+            
+        }
+       // console.log(nuevoProducto)
+      
+        fetch("http://localhost:3001/ventas/api", {
+            method: "post",
+            headers,
+            body: JSON.stringify(nuevaVenta),
+            redirect: "follow"
+        })
+  .then(response => response.json())
+  .then(response =>  alert(response.message))
+  .catch(err => console.error(err));
+        
+           location.reload();
+        
+    })
+ }
+ 
+//SET ITEM SIRVE PARA ENVIAR INFORMACION AL LOCAL STORAGE
+//GET ITEM SIRVE PARA OBTENER LO QUE TENEMOS EN LOCAL STORAGE
+  
+/////////////////////HACIENDO POST///////////////////
+
+
+
+
+
+
+
+
+</script>
