@@ -1,6 +1,6 @@
 # Entrega Portafolio Modulo 6
 
-## Cuenta de Github:
+## Cuenta de Github: https://github.com/E-a-G-s/Portafolio_Modulo_6
 
 ## LINK GITHUB PAGES
 
